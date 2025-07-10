@@ -1,0 +1,192 @@
+# .github/workflows/azure_deploy.yml
+
+name: Deploy to Azure Functions
+
+on:
+  push:
+    branches:
+      - main # Trigger on pushes to the main branch
+
+env:
+  AZURE_REGION: canadacentral # Default Azure region, can be overridden by Terraform variable
+
+permissions:
+  id-token: write    # Required for OIDC
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_from_email_address: ${{ secrets.FROM_EMAIL_ADDRESS }}
+      TF_VAR_azure_sendgrid_secret_val: ${{ secrets.SGKEY }}
+      TF_VAR_to_email_address : ${{ secrets.TO_EMAIL_ID }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          # Recommended: Use OpenID Connect (OIDC) for enhanced security
+          client-id: ${{ secrets.AZURE_CLIENT_ID }} # Azure AD App Registration Client ID
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }} # Azure AD Tenant ID
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} # Azure Subscription ID
+          # Use federated credentials (recommended for OIDC)
+          enable-AzPSSession: true # Required for some Azure CLI/PowerShell commands if needed
+          # OR (less secure): Use service principal with password/certificate
+          # creds: ${{ secrets.AZURE_CREDENTIALS }} # JSON string of service principal credentials
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.x.x # Specify a suitable Terraform version
+  
+      # setup code bucket and tf state
+      #- name: Terraform Init
+      #  run: terraform init
+      #  working-directory: ./bootstrap/azure
+      
+      #- name: Terraform Apply
+      #  run: terraform apply -auto-approve -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"  -var="client_id=${{ secrets.AZURE_CLIENT_ID }}" -var="tenant_id=${{ secrets.AZURE_TENANT_ID }}" #-var="az_resource_group=${{ secrets.AZURE_RESOURCE_GROUP }}"
+      #  working-directory: ./bootstrap/azure
+      - name: Remove zip
+        run: rm -f ./*.zip
+        working-directory: ./terraform/azure
+
+      - name: 'Checkout Function App Source Code'
+        uses: actions/checkout@v4 # Check out your repository where your function code lives
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Or your preferred Node.js version 18 is EoS
+     
+      - name: Terraform Init
+        run: |
+          terraform init \
+          -backend-config="resource_group_name=mccntfrg" \
+          -backend-config="storage_account_name=mccntfstatebucket" \
+          -backend-config="container_name=tfstate" \
+          -backend-config="key=azure/terraform.tfstate"
+        working-directory: ./terraform/azure # Run terraform commands from the terraform directory
+
+     # - name: Terraform Plan
+     #   run: terraform plan -var="from_email_address=${{ secrets.FROM_EMAIL_ADDRESS }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"
+     #   working-directory: ./terraform/azure
+        # Output plan to a file for review (optional)
+        # -out="plan.tfplan"
+      - name: Terraform Plan
+        run: terraform plan -refresh=true -var="from_email_address=${{ secrets.FROM_EMAIL_ADDRESS }}" -var="azure_sendgrid_secret_val=${{ secrets.SGKEY }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"  -var="client_id=${{ secrets.AZURE_CLIENT_ID }}" -var="tenant_id=${{ secrets.AZURE_TENANT_ID }}"
+        working-directory: ./terraform/azure
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -var="from_email_address=${{ secrets.FROM_EMAIL_ADDRESS }}"  -var="azure_sendgrid_secret_val=${{ secrets.SGKEY }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"  -var="client_id=${{ secrets.AZURE_CLIENT_ID }}" -var="tenant_id=${{ secrets.AZURE_TENANT_ID }}" #-var="az_resource_group=${{ secrets.AZURE_RESOURCE_GROUP }}"
+        working-directory: ./terraform/azure
+
+      - name: Make build.sh executable
+        run: chmod +x ./sourceBuild.sh
+        working-directory: ./terraform/azure
+
+      - name: Run build script
+        run: ./sourceBuild.sh
+        working-directory: ./terraform/azure    
+
+     # - name: Deploy sentimentAnalyzer via zipdeploy (raw source)
+     #   uses: fjogeleit/http-request-action@v1
+     #   with:
+     #     url: https://multiccn-sentimentanalyzer.scm.azurewebsites.net/api/zipdeploy
+     #     method: POST
+     #     username: ${{ secrets.AZURE_SENTIMENTANALYZER_PUBLISH_USERNAME }}
+     #     password: ${{ secrets.AZURE_SENTIMENTANALYZER_PUBLISH_PASSWORD }}
+     #     files: './terraform/azure/sentimentAnalyzer.zip'
+     #     contentType: application/zip
+      
+      - name: Verify all Azure function zips exist
+        run: |
+          FILES=(sentimentAnalyzer.zip fetchSummary.zip sendNotification.zip)
+          for file in "${FILES[@]}"; do
+            if [ ! -f "./terraform/azure/$file" ]; then
+              echo "❌ Missing: $file"
+              exit 1
+            fi
+            echo "✅ Found: $file"
+          done
+
+      - name: Enable Kudu/Oryx Build
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az functionapp config appsettings set \
+              --name multiccn-fetchSummary \
+              --resource-group multiccn-rg \
+              --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true ENABLE_ORYX_BUILD=true NODE_ENV=development
+
+      - name: Deploy sendNotification function
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az functionapp deployment source config-zip \
+            --resource-group multiccn-rg \
+            --name multiccn-sendNotification  \
+            --src ./terraform/azure/sendNotification.zip
+
+      - name: Deploy fetchSummary function
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az functionapp deployment source config-zip \
+            --resource-group multiccn-rg \
+            --name multiccn-fetchSummary  \
+            --src ./terraform/azure/fetchSummary.zip
+
+      - name: Deploy sentimentAnalyzer function
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az functionapp deployment source config-zip \
+            --resource-group multiccn-rg \
+            --name multiccn-sentimentAnalyzer  \
+            --src ./terraform/azure/sentimentAnalyzer.zip
+
+    #  - name: Deploy reviewsummary function
+    #    uses: azure/CLI@v1
+    #    with:
+    #      inlineScript: |
+    #        az functionapp deployment source config-zip \
+    #        --resource-group multiccn-rg \
+    #        --name multiccn-fetchreview  \
+    #        --src ./terraform/azure/fetchreview.zip
+
+      #- name: Deploy sentimentAnalyzer function
+      #  uses: Azure/functions-action@v1
+      #  with:
+      #    app-name: multiccn-sentimentAnalyzer
+      #    package: ./terraform/azure/sentimentAnalyzer.zip
+      #    publish-profile: ${{ secrets.AZURE_SENTIMENTANALYZER_PUBLISH_PROFILE }} 
+
+      #- name: Deploy fetchSummary function
+      #  uses: Azure/functions-action@v1
+      #  with:
+      #    app-name: multiccn-fetchSummary
+      #    package: ./terraform/azure/fetchSummary.zip
+      #    publish-profile: ${{ secrets.AZURE_FETCHSUMMARY_PUBLISH_PROFILE }}
+
+      #- name: Deploy sendNotification function
+      #  uses: Azure/functions-action@v1
+      #  with:
+      #    app-name: multiccn-sendNotification
+      #    package: ./terraform/azure/sendNotification.zip
+       #   publish-profile: ${{ secrets.AZURE_SENDNOTIFICATION_PUBLISH_PROFILE }}   
+          
+          #- name: Install Azure CLI
+          #  uses: azure/setup-az-cli@v1
+
+      #- name: Deploy fetchSummary function
+      #  run: az functionapp deployment source config-zip --resource-group multiccn-rg --name multiccn-fetchsummary --src ./terraform/azure/fetchSummary.zip
+
+      #- name: Deploy sendNotification function
+      #  run: az functionapp deployment source config-zip --resource-group multiccn-rg --name multiccn-sendNotification --src ./terraform/azure/sendNotification.zip
+
+      #- name: Deploy sentimentAnalyzer function
+      #  run: az functionapp deployment source config-zip --resource-group multiccn-rg --name multiccn-sentimentAnalyzer --src ./terraform/azure/sentimentAnalyzer.zip

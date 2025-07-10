@@ -1,0 +1,110 @@
+# .github/workflows/aws_deploy.yml
+
+name: Deploy to AWS Lambda
+
+on:
+  push:
+    branches:
+      - main # Trigger on pushes to the main branch
+
+env:
+  AWS_REGION: eu-north-1 # Default AWS region, can be overridden by Terraform variable
+
+permissions:
+  id-token: write    # Required for OIDC
+  contents: write     # For actions/checkout
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      TF_VAR_from_email_address: ${{ secrets.FROM_EMAIL_ADDRESS }}
+      TF_VAR_aws_sendgrid_secret_val: ${{ secrets.SGKEY }}
+      TF_VAR_to_email_address : ${{ secrets.TO_EMAIL_ID }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # Recommended: Use OIDC for enhanced security
+          role-to-assume: ${{ secrets.AWS_ROLE }} # <<< CHANGE THIS
+          role-session-name: githubactions-session
+          aws-region: ${{ secrets.AWS_REGION }}
+          # OR (less secure): Use static credentials from GitHub Secrets
+          # aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          # aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.x.x # Specify a suitable Terraform version
+
+      # setup code bucket and tf state
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./bootstrap/aws
+      
+      - name: Terraform Apply
+        run: terraform apply -auto-approve 
+        working-directory: ./bootstrap/aws
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Or your preferred Node.js version 18 is EOS
+
+      - name: Make build.sh executable
+        run: chmod +x ./build.sh
+        working-directory: ./terraform/aws
+
+      - name: Zip Lambda deployment package # zip -r ./terraform/aws/sendgrid_lambda.zip core aws node_modules package.json
+        run: |
+          ./build.sh
+        working-directory: ./terraform/aws # Zip from the root of the repository
+    
+      - name: 🔍 List contents
+        run: ls -R
+        working-directory: ./terraform/aws
+
+      - name: Debug Terraform setup
+        run: |
+          pwd
+          echo "Current directory contents:"
+          ls -la
+      
+          echo "Checking terraform directory (should exist based on workflow):"
+          if [ -d "./terraform" ]; then
+          echo "terraform directory exists"
+          ls -la ./terraform
+          if [ -d "./terraform/aws" ]; then
+          echo "terraform/aws directory exists"
+          ls -la ./terraform/aws
+          else
+          echo "terraform/aws directory does not exist!"
+          fi
+          else
+          echo "terraform directory does not exist!"
+          fi
+
+      - name: Terraform Init
+        run: |
+          terraform init \
+          -backend-config="bucket=mcloud-code-bucket" \
+          -backend-config="key=aws/terraform.tfstate" \
+          -backend-config="region=eu-north-1" \
+          -backend-config="dynamodb_table=mccn-tf-lock-table"
+        working-directory: ./terraform/aws
+             
+      - name: Terraform Plan
+        run: terraform plan 
+        working-directory: ./terraform/aws
+        # Output plan to a file for review (optional)
+        # -out="plan.tfplan"  - # -out="plan.tfplan"
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve #-var="from_email_address=${{ secrets.FROM_EMAIL_ADDRESS }}" -var="azure_sendgrid_secret_val=${{ secrets.SGKEY }}"
+        working-directory: ./terraform/aws
+        # If using plan file:
+        # terraform apply -auto-approve "plan.tfplan"
