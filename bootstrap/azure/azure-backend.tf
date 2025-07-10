@@ -33,7 +33,7 @@ variable "client_id" {
 }
 
 resource "azurerm_storage_account" "tf_state" {
-  name                     = "mccntfstatebucket"
+  name                     = "cathstorageacc"
   resource_group_name      = azurerm_resource_group.tf.name
   location                 = azurerm_resource_group.tf.location
   account_tier             = "Standard"

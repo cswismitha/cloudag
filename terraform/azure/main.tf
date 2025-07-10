@@ -9,7 +9,7 @@ provider "azurerm" {
 terraform {
   backend "azurerm" {
     resource_group_name  = "DefaultResourceGroup-CCAN"
-    storage_account_name = "mccntfstatebucket"
+    storage_account_name = "cathstorageacc"
     container_name       = "tfstate"
     key                  = "terraform.tfstate"
   }

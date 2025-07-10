@@ -66,7 +66,7 @@ jobs:
         run: |
           terraform init \
           -backend-config="resource_group_name=DefaultResourceGroup-CCAN" \
-          -backend-config="storage_account_name=mccntfstatebucket" \
+          -backend-config="storage_account_name=cathstorageacc" \
           -backend-config="container_name=tfstate" \
           -backend-config="key=azure/terraform.tfstate"
         working-directory: ./terraform/azure # Run terraform commands from the terraform directory
