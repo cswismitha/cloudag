@@ -1,4 +1,4 @@
-
+/*
 # It creates DynamoDB tables
 
 resource "aws_dynamodb_table" "customerReviews" {
@@ -35,3 +35,4 @@ resource "aws_dynamodb_table" "reviewSummary" {
 
 
 
+*/

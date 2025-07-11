@@ -5,14 +5,14 @@ data "aws_caller_identity" "current" {}
 
 # --- Data Source: AWS Secrets Manager Secret ---
 # AWS Secrets Manager creation of a secret
-resource "aws_secretsmanager_secret" "sendgrid_api_key_secret" {
+/*resource "aws_secretsmanager_secret" "sendgrid_api_key_secret" {
   name = var.aws_sendgrid_secret_name # e.g., "sendgrid/api_key"
 }
 # AWS Secrets Manager: Add the Secret Key Value
 resource "aws_secretsmanager_secret_version" "sendgrid_api_key_version" {
   secret_id     = aws_secretsmanager_secret.sendgrid_api_key_secret.id
   secret_string = var.aws_sendgrid_secret_val
-}
+}*/
 
 # Create Lambda Function sentimentAnalyzer
 resource "aws_lambda_function" "sentimentAnalyzer" {

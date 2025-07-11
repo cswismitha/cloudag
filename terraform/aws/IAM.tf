@@ -1,3 +1,4 @@
+/*
 # Lambda IAM Role -- for fetchSummary lambda 
 resource "aws_iam_role" "fetchSummary_role" {
   name = "fetchSummary_role"
@@ -208,3 +209,4 @@ resource "aws_iam_role_policy" "eventbridge_scheduler_invoke_lambda" {
   depends_on = [ aws_lambda_function.sentimentAnalyzer ]
 }
 
+*/
