@@ -12,10 +12,10 @@ variable "az_resource_group" {
   default     = "DefaultResourceGroup-CCAN"
 }
 
-resource "azurerm_resource_group" "tf" {
-  name     = "${var.az_resource_group}"
-  location = "canadacentral"
-}
+#resource "azurerm_resource_group" "tf" {
+ # name     = "${var.az_resource_group}"
+  #location = "canadacentral"
+#}
 
 variable "subscription_id" {
   type        = string
@@ -34,8 +34,8 @@ variable "client_id" {
 
 resource "azurerm_storage_account" "tf_state" {
   name                     = "cathstorageacc"
-  resource_group_name      = azurerm_resource_group.tf.name
-  location                 = azurerm_resource_group.tf.location
+  resource_group_name      = "DefaultResourceGroup-CCAN"
+  location                 = "canadacentral"
   account_tier             = "Standard"
   account_replication_type = "LRS"
 
@@ -58,7 +58,7 @@ resource "azurerm_storage_account" "tf_state" {
 
 resource "azurerm_storage_container" "tfstate" {
   name                  = "tfstate"
-  storage_account_name  = azurerm_storage_account.tf_state.name
+  storage_account_name  = "cathstorageacc"
   container_access_type = "private"
 }
 
