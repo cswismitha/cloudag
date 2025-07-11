@@ -119,7 +119,7 @@ jobs:
           inlineScript: |
             az functionapp config appsettings set \
               --name multiccn-fetchSummary \
-              --resource-group multiccn-rg \
+              --resource-group DefaultResourceGroup-CCAN \
               --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true ENABLE_ORYX_BUILD=true NODE_ENV=development
 
       - name: Deploy sendNotification function
@@ -127,7 +127,7 @@ jobs:
         with:
           inlineScript: |
             az functionapp deployment source config-zip \
-            --resource-group multiccn-rg \
+            --resource-group DefaultResourceGroup-CCAN \
             --name multiccn-sendNotification  \
             --src ./terraform/azure/sendNotification.zip
 
@@ -136,7 +136,7 @@ jobs:
         with:
           inlineScript: |
             az functionapp deployment source config-zip \
-            --resource-group multiccn-rg \
+            --resource-group DefaultResourceGroup-CCAN \
             --name multiccn-fetchSummary  \
             --src ./terraform/azure/fetchSummary.zip
 
@@ -145,7 +145,7 @@ jobs:
         with:
           inlineScript: |
             az functionapp deployment source config-zip \
-            --resource-group multiccn-rg \
+            --resource-group DefaultResourceGroup-CCAN \
             --name multiccn-sentimentAnalyzer  \
             --src ./terraform/azure/sentimentAnalyzer.zip
 
@@ -154,7 +154,7 @@ jobs:
     #    with:
     #      inlineScript: |
     #        az functionapp deployment source config-zip \
-    #        --resource-group multiccn-rg \
+    #        --resource-group DefaultResourceGroup-CCAN \
     #        --name multiccn-fetchreview  \
     #        --src ./terraform/azure/fetchreview.zip
 
@@ -183,10 +183,10 @@ jobs:
           #  uses: azure/setup-az-cli@v1
 
       #- name: Deploy fetchSummary function
-      #  run: az functionapp deployment source config-zip --resource-group multiccn-rg --name multiccn-fetchsummary --src ./terraform/azure/fetchSummary.zip
+      #  run: az functionapp deployment source config-zip --resource-group DefaultResourceGroup-CCAN --name multiccn-fetchsummary --src ./terraform/azure/fetchSummary.zip
 
       #- name: Deploy sendNotification function
-      #  run: az functionapp deployment source config-zip --resource-group multiccn-rg --name multiccn-sendNotification --src ./terraform/azure/sendNotification.zip
+      #  run: az functionapp deployment source config-zip --resource-group DefaultResourceGroup-CCAN --name multiccn-sendNotification --src ./terraform/azure/sendNotification.zip
 
       #- name: Deploy sentimentAnalyzer function
-      #  run: az functionapp deployment source config-zip --resource-group multiccn-rg --name multiccn-sentimentAnalyzer --src ./terraform/azure/sentimentAnalyzer.zip
+      #  run: az functionapp deployment source config-zip --resource-group DefaultResourceGroup-CCAN --name multiccn-sentimentAnalyzer --src ./terraform/azure/sentimentAnalyzer.zip
