@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "tf_state" {
-  bucket = "mccn-tf-state-bucket"
+  bucket = "cloudag-tf-state-bucket"
 
   versioning {
     enabled = true
@@ -27,7 +27,7 @@ resource "aws_s3_bucket" "tf_state" {
 }
 
 resource "aws_s3_bucket" "code_bucket" {
-  bucket = "mcloud-code-bucket"
+  bucket = "cloudag-cloud-bucket"
 
   versioning {
     enabled = true

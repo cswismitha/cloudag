@@ -91,7 +91,7 @@ jobs:
       - name: Terraform Init
         run: |
           terraform init \
-          -backend-config="bucket=mcloud-code-bucket" \
+          -backend-config="bucket=cloudag-cloud-bucket" \
           -backend-config="key=aws/terraform.tfstate" \
           -backend-config="region=eu-north-1" \
           -backend-config="dynamodb_table=mccn-tf-lock-table"

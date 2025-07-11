@@ -57,7 +57,7 @@ variable "aws_sendgrid_secret_val" {
 variable "aws_lambda_code_bucket" {
   description = "The name of the bucket for code files."
   type        = string
-  default     = "mcloud-code-bucket" # Change if you named your secret differently
+  default     = "cloudag-cloud-bucket" # Change if you named your secret differently
 }
 
 variable "review_table" {

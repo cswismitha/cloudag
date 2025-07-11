@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-BUCKET_NAME="mcloud-code-bucket"
+BUCKET_NAME="cloudag-cloud-bucket"
 FUNCTIONS=("sentimentAnalyzer" "fetchSummary" "sendNotification")
 
 # Cleanup old zip files
