@@ -1,7 +1,7 @@
 variable "project_prefix" {
   description = "Prefix used to name AWS resources"
   type        = string
-  default     = "multicloudcn"
+  default     = "cloudag"
 }
 
 variable "aws_region" {
