@@ -50,17 +50,17 @@ resource "aws_s3_bucket" "code_bucket" {
   }
 }
 
-resource "aws_dynamodb_table" "tf_lock" {
-  name         = "mccn-tf-lock-table"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "LockID"
+#resource "aws_dynamodb_table" "tf_lock" {
+#  name         = "mccn-tf-lock-table"
+ # billing_mode = "PAY_PER_REQUEST"
+  #hash_key     = "LockID"
 
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
+  #attribute {
+   # name = "LockID"
+    #type = "S"
+  #}
 
-  tags = {
-    Name = "Terraform Lock Table"
-  }
-}
+  #tags = {
+   # Name = "Terraform Lock Table"
+  #}
+#}
