@@ -179,7 +179,7 @@ resource "aws_iam_role_policy_attachment" "flambda_dynamodb_rw_attach" {
   role       = aws_iam_role.fetchSummary_role.name
   policy_arn = aws_iam_policy.dynamodb_rw_policy.arn
 }
-
+*/
 # IAM Role that EventBridge Scheduler assumes
 resource "aws_iam_role" "eventbridge_scheduler" {
   name = "eventbridge-scheduler-lambda-role"
@@ -210,4 +210,3 @@ resource "aws_iam_role_policy" "eventbridge_scheduler_invoke_lambda" {
   depends_on = [ aws_lambda_function.sentimentAnalyzer ]
 }
 
-*/
