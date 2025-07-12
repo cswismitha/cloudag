@@ -29,8 +29,8 @@ resource "aws_lambda_function" "sentimentAnalyzer" {
     variables = {
       # Pass the secret ARN to the Lambda function as an environment variable
       # The Lambda code will use the AWS SDK to retrieve the secret value using this ARN
-      DB_REVIEW_TABLE = aws_dynamodb_table.customerReviews.name
-      DB_SUMM_TABLE   = aws_dynamodb_table.reviewSummary.name # Sender email from Terraform variable
+      DB_REVIEW_TABLE = "customerReviews"
+      DB_SUMM_TABLE   = "reviewSummary" 
       APPID           = "389801252"
       SQSURL          = aws_sqs_queue.notification.url
       PLATFORM        = "aws"      
@@ -58,8 +58,8 @@ resource "aws_lambda_function" "fetchSummary" {
     variables = {
       # Pass the secret ARN to the Lambda function as an environment variable
       # The Lambda code will use the AWS SDK to retrieve the secret value using this ARN
-      DB_REVIEW_TABLE = aws_dynamodb_table.customerReviews.name
-      DB_SUMM_TABLE   = aws_dynamodb_table.reviewSummary.name # Sender email from Terraform variable
+      DB_REVIEW_TABLE = "customerReviews"
+      DB_SUMM_TABLE   = "reviewSummary" 
       SQSURL          = aws_sqs_queue.notification.url
       PLATFORM        = "aws"
       APPID           = "123"
@@ -84,12 +84,12 @@ resource "aws_lambda_function" "sendEmailNotification" {
     variables = {
       # Pass the secret ARN to the Lambda function as an environment variable
       # The Lambda code will use the AWS SDK to retrieve the secret value using this ARN
-      SENDGRID_API_KEY_SECRET_ARN = aws_secretsmanager_secret.sendgrid_api_key_secret.arn
+      SENDGRID_API_KEY_SECRET_ARN = "arn:aws:secretsmanager:eu-north-1:767398089028:secret:sendgridApikey1-hOuGIT"
       FROM_EMAIL                  = var.from_email_address # Sender email from Terraform variable
       TO_EMAIL                    = var.to_email_address
       SQSURL                      = aws_sqs_queue.notification.url
       PLATFORM                    = "aws"
-      SENDGRID_SECRET_NAME  = aws_secretsmanager_secret.sendgrid_api_key_secret.name
+      SENDGRID_SECRET_NAME  = "sendgridApikey1"
     }
 }
   depends_on = [

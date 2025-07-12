@@ -1,4 +1,4 @@
-/*
+
 # Lambda IAM Role -- for fetchSummary lambda 
 resource "aws_iam_role" "fetchSummary_role" {
   name = "fetchSummary_role"
@@ -45,6 +45,7 @@ resource "aws_iam_role" "sendNotification_role" {
   })
 }
 
+/*
 # IAM Policy Document for DynamoDB Read/Write
 data "aws_iam_policy_document" "dynamodb_rw" {
   statement {
