@@ -11,6 +11,7 @@ interface AppConfig {
     vault: string;
     clientID: string;
     platform: string;
+    sgapikey: string;
 }
 
 // Enforce required env vars
@@ -27,7 +28,7 @@ const platform = process.env.PLATFORM || 'aws';
 
 const config: AppConfig = {
     platform,
-    //sgapikey: requireEnv('SENDGRID_API_KEY'),
+    sgapikey: platform === 'aws' ? requireEnv('SENDGRID_SECRET_NAME') : '',
     tomailid: requireEnv('TO_EMAIL'),
     frommailid: requireEnv('FROM_EMAIL'),
     awsregion: process.env.REGION || 'eu-north-1',

@@ -1,5 +1,6 @@
 //import { SecretsManagerProvider } from "./aws/SecretsManagerProvider";
 //import { KeyVaultProvider } from "./azure/KeyVaultProvider";
+import config from "./config/config";
 import { ISecretsProvider } from "./interfaces/ISecretsProvider";
 import { EmailService } from "./services/EmailService";
 
@@ -28,14 +29,12 @@ export const handler = async ( queueItem: any, context: any ): Promise<any> => {
       const { KeyVaultProvider } = require('./azure/KeyVaultProvider');
       secProvider = new KeyVaultProvider();
       sgapikey = await secProvider.getSecret('sendgridApikey');  //('sgKey');
-      console.log('Storage queue function processed work item:', sgapikey);
+      console.log('Secret processed work item:', sgapikey);
     } else if (platform === 'aws') {
       const { SecretsManagerProvider } = require('./aws/SecretsManagerProvider');
       secProvider = new SecretsManagerProvider();
-      const sgsecret = await secProvider.getSecret('sendgridApikey1');   //('poc/sentiment');
-      console.log('Storage queue function processed work item:', sgsecret);
-      const { sgKey } = JSON.parse(sgsecret);
-      sgapikey = sgKey;
+      sgapikey = await secProvider.getSecret(config.sgapikey);   //('poc/sentiment');
+      console.log('Secret processed work item:', sgapikey);
       console.log('Storage queue function processed work item:', sgapikey);
     } else {
       console.log("Platform not supported");
