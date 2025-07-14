@@ -85,11 +85,11 @@ jobs:
         working-directory: ./terraform/azure
 
       - name: Make build.sh executable
-        run: chmod +x ./sourceBuild.sh
+        run: chmod +x ./build.sh
         working-directory: ./terraform/azure
 
       - name: Run build script
-        run: ./sourceBuild.sh
+        run: ./build.sh
         working-directory: ./terraform/azure    
 
      # - name: Deploy sentimentAnalyzer via zipdeploy (raw source)
