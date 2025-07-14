@@ -22,12 +22,12 @@ for func in "${FUNCTIONS[@]}"; do
   
   export PLATFORM=azure
   echo "Pruning AWS dependencies (if any)..."
-  npm uninstall aws-sdk @aws-sdk/client-dynamodb @aws-sdk/lib-dynamodb || true
+  #npm uninstall aws-sdk @aws-sdk/client-dynamodb @aws-sdk/lib-dynamodb || true
   # Install and build
   echo "Installing dependencies..."
   npm install --silent
   # ensure necessary package are installed
-  npm install @azure/cosmos @azure/identity @azure/keyvault-secrets @azure/msal-node
+  #npm install @azure/cosmos @azure/identity @azure/keyvault-secrets @azure/msal-node
 
   echo "Compiling TypeScript using tsconfig.azure.json..."
   npx tsc --project tsconfig.azure.json
