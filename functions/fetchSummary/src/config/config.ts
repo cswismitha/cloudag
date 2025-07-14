@@ -43,7 +43,7 @@ const config: AppConfig = {
         key: platform === 'azure' ? requireEnv('DB_KEY') : '',
         databaseId: platform === 'azure' ? process.env.DB_ID || 'cosmicworks' : '',
         containerId: platform === 'azure' ? process.env.DB_CONTAINERID || 'customerreviews' : '',
-        summcontainerId: platform === 'azure' ? process.env.DB_SUMMCONTAINERID || 'reviewsummary' : process.env.DB_SUMM_TABLE
+        summcontainerId: platform === 'azure' ? process.env.DB_SUMMCONTAINERID || 'reviewsummary' : process.env.DB_SUMM_TABLE || 'reviewsummary'
     },
     awsregion: platform === 'aws' ? process.env.REGION || 'eu-north-1' : '',
     ddb: {
