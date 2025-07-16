@@ -104,7 +104,7 @@ jobs:
         # -out="plan.tfplan"  - # -out="plan.tfplan"
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve #-var="from_email_address=${{ secrets.FROM_EMAIL_ADDRESS }}" -var="azure_sendgrid_secret_val=${{ secrets.SGKEY }}"
+        run: terraform apply -auto-approve #-var="from_email_address=${{ secrets.FROM_EMAIL_ADDRESS }}" -var="azure_sendgrid_secret_val=${{ secrets.SGKEY }}" -var="openrouter_api_key=${{ secrets.OPENROUTER_API_KEY }}"
         working-directory: ./terraform/aws
         # If using plan file:
         # terraform apply -auto-approve "plan.tfplan"

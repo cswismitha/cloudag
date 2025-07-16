@@ -22,6 +22,12 @@ variable "to_email_address" {
   sensitive   = true
 }
 
+variable "openrouter_api_key" {
+  description = "Open router Info."
+  type        = string
+  sensitive   = true
+}
+
 variable "aws_lambda_function_name_analysis" {
   description = "The name for the AWS Lambda function."
   type        = string

@@ -21,6 +21,12 @@ variable "to_email_address" {
   sensitive   = true
 }
 
+variable "openrouter_api_key" {
+  description = "Open router Info."
+  type        = string
+  sensitive   = true
+}
+
 variable "azure_sendgrid_secret_name" {
   description = "Name of the secret in Azure Key Vault for the SendGrid API key"
   type        = string
