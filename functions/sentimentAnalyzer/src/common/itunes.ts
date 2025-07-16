@@ -44,7 +44,7 @@ async function getSentimentAnalysis(feeds: AppReviewEntry[]): Promise<any | unde
                 comment += ". " + element.content.label;
             }
         });
-        console.log('trying to get summaries', comment);
+        console.log('trying to get summaries');
         // Assuming getReviewSummary exists on the summarizer object and returns a promise
         summary = await summarizer.getReviewSummary(comment);
         console.log('summary received', summary);

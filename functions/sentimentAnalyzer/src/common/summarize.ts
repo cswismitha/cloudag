@@ -28,7 +28,7 @@ async function getReviewSummary(customerReviews: string): Promise<string> {
         // or rely on inferred types if @types/node-summarizer is available.
         const summary: SummaryResult = await summarizer.getSummaryByRank();
 
-        console.log('Summary retrieved', summary);
+        // console.log('Summary retrieved', summary);
 
         // Ensure summary and summary.summary exist before accessing
         return summary && summary.summary ? summary.summary : '';

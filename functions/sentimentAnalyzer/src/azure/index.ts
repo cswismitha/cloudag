@@ -1,7 +1,7 @@
 import { app} from "@azure/functions";
 import { handler } from "../handler";
 
-app.http('tsdemo', {
+app.http('sentimentAnalyzer', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
     handler: handler
