@@ -18,7 +18,6 @@ variable "from_email_address" {
 variable "to_email_address" {
   description = "The target email address in SendGrid."
   type        = string
-  sensitive   = true
 }
 
 variable "openrouter_api_key" {
