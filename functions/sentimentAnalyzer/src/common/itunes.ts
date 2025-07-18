@@ -17,9 +17,22 @@ export interface AppReviewEntry {
             type: string;
         };
     };
+    sentiment: string;
 }
 
 const sentiment = new Sentiment();
+
+export function analyzeSentiment(text: string) {
+  const { score} = sentiment.analyze(text);
+
+  if (score > 0) {
+    return 'Positive';
+  } else if (score < 0) {
+    return 'Negative';
+  } else {
+    return 'Neutral';
+  }
+}
 
 async function getAppReviews(appId: string): Promise<AppReviewEntry[] | undefined> {
     try {
@@ -27,6 +40,9 @@ async function getAppReviews(appId: string): Promise<AppReviewEntry[] | undefine
         const response = await axios.get<{ feed: { entry: AppReviewEntry[] } }>(`https://itunes.apple.com/us/rss/customerreviews/id=${appId}/json`);
         console.log('Received app reviews');
         const feeds: AppReviewEntry[] = response.data.feed.entry;
+        feeds.forEach((element: AppReviewEntry) => {
+            element.sentiment = analyzeSentiment(element.content.label);
+        });
         return feeds;
     } catch (error: any) { // Use 'any' for error for simplicity, or a more specific error type if known
         console.error('Error fetching app reviews:', error.message || error); // Log error in a more informative way
@@ -44,7 +60,7 @@ async function getSentimentAnalysis(feeds: AppReviewEntry[]): Promise<any | unde
                 comment += ". " + element.content.label;
             }
         });
-        console.log('trying to get summaries');
+        console.log('trying to get summaries', comment);
         // Assuming getReviewSummary exists on the summarizer object and returns a promise
         summary = await summarizer.getReviewSummary(comment);
         console.log('summary received', summary);

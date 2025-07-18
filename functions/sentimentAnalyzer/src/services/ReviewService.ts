@@ -1,7 +1,7 @@
 import { IDatabaseProvider } from '../interfaces/IDatabaseProvider';
 import { IQueueProvider } from '../interfaces/IQueueProvider';
 import { stringToTimeString } from '../utils';
-import { AppReviewEntry, getAppReviews, getORSentimentAnalysis, getSentimentAnalysis } from "../common/itunes";
+import { analyzeSentiment, AppReviewEntry, getAppReviews, getORSentimentAnalysis, getSentimentAnalysis } from "../common/itunes";
 import config from "../config/config";
 import { randomUUID } from 'crypto';
 
@@ -17,13 +17,15 @@ export class ReviewService {
         await this.saveAppReviews(appId, reviews, config.cosmosdb.containerId);
         console.log('Saved reviews');
         let sentAnalysis = '';
+        let sentiment = '';
         if (reviews) {
             sentAnalysis = await getORSentimentAnalysis(reviews);
-            console.log('summary retrieved', sentAnalysis);            
-            await this.saveSummary(appId, sentAnalysis, config.cosmosdb.summContainerId);
+            console.log('summary retrieved', sentAnalysis);    
+            sentiment = analyzeSentiment(sentAnalysis);
+            await this.saveSummary(appId, sentAnalysis, sentiment, config.cosmosdb.summContainerId);
             await this.qProvider.sendMessageToQueue(JSON.stringify({ message: 'Done'}));
         }
-        return sentAnalysis;
+        return { summary: sentAnalysis, sentiment };
     }
 
     async saveAppReviews(appId: string, appReviews: any, tableName: string) {
@@ -37,6 +39,7 @@ export class ReviewService {
                         "SK": { S: "CR#" + stringToTimeString(ts) },
                         "id": { S:item.id.label },
                         "title": { S : item.title.label },
+                        "sentiment": {S : item.sentiment },
                         "content": { S : item.content.label },
                         "updated": { S : item.updated.label }
                     };
@@ -53,6 +56,7 @@ export class ReviewService {
                         id: item.id.label,
                         title: item.title.label,
                         appId: appId,
+                        sentiment: item.sentiment,
                         content: item.content.label,
                         updated: item.updated.label,
                     };
@@ -64,7 +68,7 @@ export class ReviewService {
         }
     }
 
-    async saveSummary(appId: string, summary: string, tableName: string) {
+    async saveSummary(appId: string, summary: string, sentiment: string, tableName: string) {
         const platform = process.env.PLATFORM || 'azure';
         let newItem = {};
         if (platform === 'aws') {
@@ -72,6 +76,7 @@ export class ReviewService {
                 "PK": { S : "APP#" + appId },
                 "SK": { S: "SUMM#" + new Date().getTime() },
                 "summary": { S : summary },
+                "sentiment": { S : sentiment },
                 "updated": { S : new Date() }
             };                
         } else if (platform === 'azure') {
@@ -79,6 +84,7 @@ export class ReviewService {
                 id: randomUUID(),
                 appId,
                 summary,
+                sentiment,
                 updated: new Date().getTime()
             };
         }
