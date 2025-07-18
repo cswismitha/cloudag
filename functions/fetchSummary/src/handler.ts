@@ -57,13 +57,8 @@ export const handler = async ( event: any, context: any ): Promise<any> => {
       console.log("Platform not supported");
     }
     const summaryService = new SummaryService(dbProvider as IDatabaseProvider);
-    const sentAnalysis = await summaryService.process();
-    console.log('Processed');
-    responseBody = {
-        message: sentAnalysis,
-        input: requestBody
-      };
-    
+    responseBody = await summaryService.process();
+    console.log('Processed');    
   } catch (error: any) {
     console.error('Error processing event:', error);
     statusCode = 400; // Bad Request

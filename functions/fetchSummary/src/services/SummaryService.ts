@@ -10,12 +10,12 @@ export class SummaryService {
     async process() {
         const appId = config.appId;
         const platform = process.env.PLATFORM || 'azure';
-        let summary:string = '';
+        let summary:any = {};
         const record = await this.dbProvider.getLatestItem({ S : "APP#" + appId }, config.cosmosdb.summcontainerId);
         if (platform === 'azure') {
-            summary = record.summary;
+            summary = { summary: record.summary, sentiment: record.sentiment };
         } else {
-            summary = record.summary;
+            summary = { summary: record.summary, sentiment: record.sentiment };
         }
         return summary;
     }
