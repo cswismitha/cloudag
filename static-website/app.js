@@ -28,8 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const fullApiUrl = `${API_ENDPOINT_URL}`; 
         
         fetch(fullApiUrl, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' , 'Access-Control-Allow-Origin': '*'},
+			body: JSON.stringify({ appId : '389801252' })
         })
         .then(response => {
             if (!response.ok) {
@@ -43,9 +44,13 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             sentimentIndicator.style.backgroundColor = '#e6e6e6';
-            const indicator = data?.sentiment_indicator?.toLowerCase();
-            if (['red', 'yellow', 'green'].includes(indicator)) {
-                sentimentIndicator.style.backgroundColor = indicator;
+            const sentiment = data?.sentiment?.toLowerCase();
+            if (sentiment == 'positive') {
+                sentimentIndicator.style.backgroundColor = '#65D273';
+            } else if (sentiment == 'negative') {
+                sentimentIndicator.style.backgroundColor = '#EF476F';
+            } else if (sentiment == 'neutral') {
+                sentimentIndicator.style.backgroundColor = '#FFD166';
             }
             summaryContent.textContent = data?.summary || 'No summary available.';
             loading.style.display = 'none';
