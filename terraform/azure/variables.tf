@@ -59,3 +59,8 @@ variable "client_id" {
   type        = string
   description = "Azure client ID of the Federated Identity credential"
 }
+
+variable "app_client_id" {
+  type        = string
+  description = "Azure client ID of the Federated Identity credential"
+}

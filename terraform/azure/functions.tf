@@ -101,15 +101,15 @@ resource "azurerm_windows_function_app" "fetchSummary" {
     FUNCTIONS_WORKER_RUNTIME       = "node"
     FUNCTIONS_EXTENSION_VERSION     = "~4"
     SCM_DO_BUILD_DURING_DEPLOYMENT = "true"
-    DB_ENDPOINT     = azurerm_cosmosdb_account.cosmos.endpoint
+    DB_ENDPOINT     = "AccountEndpoint=${azurerm_cosmosdb_account.cosmos.endpoint};AccountKey=${azurerm_cosmosdb_account.cosmos.primary_key};"
     DB_ID           = azurerm_cosmosdb_sql_database.database.name
     DB_KEY          = azurerm_cosmosdb_account.cosmos.primary_key
     DB_SUMMCONTAINERID    = azurerm_cosmosdb_sql_container.sent_analysis.name
     AZQUEUE_NAME                   = azurerm_storage_queue.notification.name
-    AZQUEUE_URL                    = "https://${azurerm_storage_account.queue.name}.queue.core.windows.net/${azurerm_storage_queue.notification.name}"
+    AZQUEUE_URL                    = azurerm_storage_account.func_storage.primary_connection_string
     PLATFORM                       = "azure"
     KEY_VAULT_URL                  = azurerm_key_vault.kv.vault_uri
-    CLIENT_ID                      = var.client_id
+    CLIENT_ID                      = var.app_client_id
         
   }
 
@@ -146,10 +146,10 @@ resource "azurerm_windows_function_app" "sendNotification" {
     TO_EMAIL                       = var.to_email_address
     SENDGRID_API_KEY               = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.kv.vault_uri}/secrets/${var.azure_sendgrid_secret_name}/)"
     AZQUEUE_NAME                   = azurerm_storage_queue.notification.name
-    AZQUEUE_URL                    = "https://${azurerm_storage_account.queue.name}.queue.core.windows.net/${azurerm_storage_queue.notification.name}"
+    AZQUEUE_URL                    = azurerm_storage_account.func_storage.primary_connection_string
     PLATFORM                       = "azure"
     KEY_VAULT_URL                  = azurerm_key_vault.kv.vault_uri
-    CLIENT_ID                      = var.client_id
+    CLIENT_ID                      = var.app_client_id
   }
 
   tags = {
@@ -188,8 +188,8 @@ resource "azurerm_windows_function_app" "sentimentAnalyzer" {
     SCM_DO_BUILD_DURING_DEPLOYMENT = "true"
     AzureWebJobsStorage   = azurerm_storage_account.func_storage.primary_connection_string    
 
-    AZQUEUE_URL     = "https://${azurerm_storage_account.queue.name}.queue.core.windows.net/${azurerm_storage_queue.notification.name}"
-    DB_ENDPOINT     = azurerm_cosmosdb_account.cosmos.endpoint
+    AZQUEUE_URL     = azurerm_storage_account.func_storage.primary_connection_string
+    DB_ENDPOINT     = "AccountEndpoint=${azurerm_cosmosdb_account.cosmos.endpoint};AccountKey=${azurerm_cosmosdb_account.cosmos.primary_key};"
     DB_ID           = azurerm_cosmosdb_sql_database.database.name
     DB_KEY          = azurerm_cosmosdb_account.cosmos.primary_key
     DB_CONTAINERID        = azurerm_cosmosdb_sql_container.cust_review.name
@@ -200,7 +200,7 @@ resource "azurerm_windows_function_app" "sentimentAnalyzer" {
     PLATFORM                       = "azure"
     APPID                          = "123"
     KEY_VAULT_URL                  = azurerm_key_vault.kv.vault_uri
-    CLIENT_ID                      = var.client_id
+    CLIENT_ID                      = var.app_client_id
     OPENROUTER_API_KEY             = var.openrouter_api_key
   }
 

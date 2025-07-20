@@ -22,6 +22,7 @@ jobs:
       TF_VAR_azure_sendgrid_secret_val: ${{ secrets.SGKEY }}
       TF_VAR_to_email_address : ${{ secrets.TO_EMAIL_ID }}
       TF_VAR_openrouter_api_key : ${{ secrets.OPENROUTER_API_KEY }}
+      TF_VAR_app_client_id : ${{ secrets.APP_CLIENT_ID }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -78,11 +79,11 @@ jobs:
         # Output plan to a file for review (optional)
         # -out="plan.tfplan"
       - name: Terraform Plan
-        run: terraform plan -refresh=true -lock=false -var="from_email_address=${{ secrets.FROM_EMAIL_ADDRESS }}" -var="azure_sendgrid_secret_val=${{ secrets.SGKEY }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"  -var="client_id=${{ secrets.AZURE_CLIENT_ID }}" -var="tenant_id=${{ secrets.AZURE_TENANT_ID }}" -var="openrouter_api_key=${{ secrets.OPENROUTER_API_KEY }}"
+        run: terraform plan -refresh=true -lock=false -var="from_email_address=${{ secrets.FROM_EMAIL_ADDRESS }}" -var="azure_sendgrid_secret_val=${{ secrets.SGKEY }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"  -var="client_id=${{ secrets.AZURE_CLIENT_ID }}" -var="tenant_id=${{ secrets.AZURE_TENANT_ID }}" -var="openrouter_api_key=${{ secrets.OPENROUTER_API_KEY }}" -var="app_client_id=${{ secrets.APP_CLIENT_ID }}"
         working-directory: ./terraform/azure
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -lock=false -var="from_email_address=${{ secrets.FROM_EMAIL_ADDRESS }}"  -var="azure_sendgrid_secret_val=${{ secrets.SGKEY }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"  -var="client_id=${{ secrets.AZURE_CLIENT_ID }}" -var="tenant_id=${{ secrets.AZURE_TENANT_ID }}" #-var="az_resource_group=${{ secrets.AZURE_RESOURCE_GROUP }}" -var="openrouter_api_key=${{ secrets.OPENROUTER_API_KEY }}"
+        run: terraform apply -auto-approve -lock=false -var="from_email_address=${{ secrets.FROM_EMAIL_ADDRESS }}"  -var="azure_sendgrid_secret_val=${{ secrets.SGKEY }}" -var="subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}"  -var="client_id=${{ secrets.AZURE_CLIENT_ID }}" -var="tenant_id=${{ secrets.AZURE_TENANT_ID }}" #-var="az_resource_group=${{ secrets.AZURE_RESOURCE_GROUP }}" -var="openrouter_api_key=${{ secrets.OPENROUTER_API_KEY }}" -var="app_client_id=${{ secrets.APP_CLIENT_ID }}"
         working-directory: ./terraform/azure
 
       - name: Make build.sh executable
