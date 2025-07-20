@@ -42,7 +42,7 @@ resource "aws_s3_object" "config_js" {
   content_type = "application/javascript"
   content = <<EOT
 window._env_ = {
-  API_ENDPOINT_URL: "${aws_apigatewayv2_api.http_api.api_endpoint}/summary"
+  API_ENDPOINT_URL: "${aws_apigatewayv2_api.http_api.api_endpoint}/${aws_apigatewayv2_stage.name}/summary"
 };
 EOT
   #acl = "public-read"

@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
         checkButton.textContent = 'Analyzing...';
 
         const durationMonths = durationSelect.value;
-        const fullApiUrl = `${API_ENDPOINT_URL}`; 
+        const fullApiUrl = `${API_ENDPOINT_URL}`;  
         
         fetch(fullApiUrl, {
             method: 'POST',
