@@ -7,8 +7,7 @@ export class SummaryService {
         private dbProvider: IDatabaseProvider
     ) {}
 
-    async process() {
-        const appId = config.appId;
+    async process(appId: any) {
         const platform = process.env.PLATFORM || 'azure';
         let summary:any = {};
         const record = await this.dbProvider.getLatestItem({ S : "APP#" + appId }, config.cosmosdb.summcontainerId);

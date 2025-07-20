@@ -56,8 +56,10 @@ export const handler = async ( event: any, context: any ): Promise<any> => {
     } else {
       console.log("Platform not supported");
     }
+    console.log("APP ID found: ", requestBody.appId);
+    if (!requestBody.appId) throw new Error("App Id not in the request");
     const summaryService = new SummaryService(dbProvider as IDatabaseProvider);
-    responseBody = await summaryService.process();
+    responseBody = await summaryService.process(requestBody.appId);
     console.log('Processed');    
   } catch (error: any) {
     console.error('Error processing event:', error);
