@@ -224,9 +224,10 @@ resource "azurerm_api_management_api_operation_policy" "summary_post_cors" {
 <policies>
   <inbound>
     <base />
-    <cors allow-credentials="false">
+    <cors allow-credentials="true">
       <allowed-origins>
-        <origin>*</origin>
+        <origin>https://cloudagstorage.blob.core.windows.net</origin>
+        <origin>https://portal.azure.com</origin>
       </allowed-origins>
       <allowed-methods>
         <method>POST</method>
