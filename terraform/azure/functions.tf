@@ -38,6 +38,11 @@ resource "azurerm_key_vault" "kv" {
   
 }
 
+data "azurerm_user_assigned_identity" "uami" {
+  name                = "demo"
+  resource_group_name = azurerm_resource_group.rg.name
+}
+
 resource "azurerm_key_vault_access_policy" "github_actions" {
   key_vault_id = azurerm_key_vault.kv.id
 
@@ -94,7 +99,9 @@ resource "azurerm_windows_function_app" "fetchSummary" {
   }
 
   identity {
-    type = "SystemAssigned"
+    type = "UserAssigned"
+    # Reference the ID of the User-Assigned Managed Identity
+    identity_ids = [data.azurerm_user_assigned_identity.uami.id]
   }
 
   app_settings = {
@@ -135,7 +142,9 @@ resource "azurerm_windows_function_app" "sendNotification" {
   }
 
   identity {
-    type = "SystemAssigned"
+    type = "UserAssigned"
+    # Reference the ID of the User-Assigned Managed Identity
+    identity_ids = [data.azurerm_user_assigned_identity.uami.id]
   }
 
   app_settings = {  
@@ -177,7 +186,9 @@ resource "azurerm_windows_function_app" "sentimentAnalyzer" {
   }
 
   identity {
-    type = "SystemAssigned"
+    type = "UserAssigned"
+    # Reference the ID of the User-Assigned Managed Identity
+    identity_ids = [data.azurerm_user_assigned_identity.uami.id]
   }
 
   app_settings = {
