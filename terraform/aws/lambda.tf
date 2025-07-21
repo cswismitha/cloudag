@@ -29,8 +29,8 @@ resource "aws_lambda_function" "sentimentAnalyzer" {
     variables = {
       # Pass the secret ARN to the Lambda function as an environment variable
       # The Lambda code will use the AWS SDK to retrieve the secret value using this ARN
-      DB_REVIEW_TABLE = "customerReviews"
-      DB_SUMM_TABLE   = "reviewSummary" 
+      DB_REVIEW_TABLE = "customerreviews"
+      DB_SUMM_TABLE   = "reviewsummary" 
       APPID           = "389801252"
       SQSURL          = aws_sqs_queue.notification.url
       PLATFORM        = "aws"      
@@ -57,8 +57,8 @@ resource "aws_lambda_function" "fetchSummary" {
     variables = {
       # Pass the secret ARN to the Lambda function as an environment variable
       # The Lambda code will use the AWS SDK to retrieve the secret value using this ARN
-      DB_REVIEW_TABLE = "customerReviews"
-      DB_SUMM_TABLE   = "reviewSummary" 
+      DB_REVIEW_TABLE = "customerreviews"
+      DB_SUMM_TABLE   = "reviewsummary" 
       SQSURL          = aws_sqs_queue.notification.url
       PLATFORM        = "aws"
       APPID           = "123"
