@@ -158,13 +158,13 @@ resource "aws_iam_role_policy_attachment" "slambda_logs" {
 
 resource "aws_iam_role_policy_attachment" "slambda_dynamodb_rw_attach" {
   role      = aws_iam_role.sentimentAnalyzer_role.name
-  policy_arn = data.dynamodb_full_access.arn  
+  policy_arn = data.aws_iam_policy.dynamodb_full_access.arn  
   #policy_arn = aws_iam_policy.dynamodb_rw_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "slambda_sqs_write_attach" {
   role       = aws_iam_role.sentimentAnalyzer_role.name
-  policy_arn = data.sqs_full_access.arn
+  policy_arn = data.aws_iam_policy.sqs_full_access.arn
 }
 
 ## for sendNotification lambda
@@ -175,12 +175,12 @@ resource "aws_iam_role_policy_attachment" "nlambda_logs" {
 
 resource "aws_iam_role_policy_attachment" "nlambda_sqs_write_attach" {
   role       = aws_iam_role.sendNotification_role.name
-  policy_arn = data.sqs_full_access.arn
+  policy_arn = data.aws_iam_policy.sqs_full_access.arn
   #policy_arn = aws_iam_policy.lambda_sqs_write_policy.arn
 }
 resource "aws_iam_role_policy_attachment" "nlambda_secretsmanager_attachment" {
   role       = aws_iam_role.sendNotification_role.name
-  policy_arn = data.sm_full_access.arn
+  policy_arn = data.aws_iam_policy.sm_full_access.arn
 }
 
 ## for fetcSummary lambda
@@ -191,7 +191,7 @@ resource "aws_iam_role_policy_attachment" "flambda_logs" {
 
 resource "aws_iam_role_policy_attachment" "flambda_dynamodb_rw_attach" {
   role       = aws_iam_role.fetchSummary_role.name
-  policy_arn = data.dynamodb_full_access.arn 
+  policy_arn = data.aws_iam_policy.dynamodb_full_access.arn 
   #policy_arn = aws_iam_policy.dynamodb_rw_policy.arn
 }
 
