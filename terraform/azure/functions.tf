@@ -99,7 +99,7 @@ resource "azurerm_windows_function_app" "fetchSummary" {
   }
 
   identity {
-    type = "SystemAssigned, UserAssigned"
+    type = "UserAssigned"
     # Reference the ID of the User-Assigned Managed Identity
     identity_ids = [data.azurerm_user_assigned_identity.uami.id]
   }
@@ -142,7 +142,7 @@ resource "azurerm_windows_function_app" "sendNotification" {
   }
 
   identity {
-    type = "SystemAssigned, UserAssigned"
+    type = "UserAssigned"
     # Reference the ID of the User-Assigned Managed Identity
     identity_ids = [data.azurerm_user_assigned_identity.uami.id]
   }
@@ -191,7 +191,7 @@ resource "azurerm_windows_function_app" "sentimentAnalyzer" {
   }
 
   identity {
-    type = "SystemAssigned, UserAssigned"
+    type = "UserAssigned"
     # Reference the ID of the User-Assigned Managed Identity
     identity_ids = [data.azurerm_user_assigned_identity.uami.id]
   }

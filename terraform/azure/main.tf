@@ -155,20 +155,20 @@ resource "azurerm_role_assignment" "sentiment_cosmosdb_access" {
   scope                = azurerm_resource_group.rg.id #azurerm_cosmosdb_account.cosmos.id
   role_definition_name = "Cosmos DB Operator"
   #role_definition_id   = data.azurerm_role_definition.user_access_admin.id
-  principal_id         = azurerm_windows_function_app.sentimentAnalyzer.identity[0].principal_id
+  principal_id         = data.azurerm_user_assigned_identity.uami.principal_id
 }
 
 resource "azurerm_role_assignment" "fetchsummary_cosmosdb_access" {
   scope                = azurerm_resource_group.rg.id  #azurerm_cosmosdb_account.cosmos.id
   role_definition_name = "Cosmos DB Operator"
   #role_definition_id   = data.azurerm_role_definition.user_access_admin.id
-  principal_id         = azurerm_windows_function_app.fetchSummary.identity[0].principal_id
+  principal_id         = data.azurerm_user_assigned_identity.uami.principal_id
 }
 
 resource "azurerm_role_assignment" "queue_send_permission" {
   scope                = azurerm_storage_account.queue.id
   role_definition_name = "Storage Queue Data Contributor"
-  principal_id         = azurerm_windows_function_app.sentimentAnalyzer.identity[0].principal_id
+  principal_id         = data.azurerm_user_assigned_identity.uami.principal_id
 }
 
 resource "azurerm_api_management" "apim" {
