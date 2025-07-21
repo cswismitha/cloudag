@@ -92,6 +92,7 @@ locals {
   time_part    = formatdate("HH:mm:ss", local.raw_time)
   future_time  = "${local.date_part}T${local.time_part}Z"
 }
+
 #Eventbridge Scheduler
 resource "aws_scheduler_schedule" "daily_trigger" {
   name = "${var.project_prefix}-trigger"
@@ -101,17 +102,23 @@ resource "aws_scheduler_schedule" "daily_trigger" {
   }
 
     # Run once daily at 8 PM UTC
-  schedule_expression = "cron(0 20 * * ? *)"
+  schedule_expression = "rate(10 minutes)" #"cron(0 20 * * ? *)"
   
   # Or specify timezone if needed
-  schedule_expression_timezone = "UTC"
+  #schedule_expression_timezone = "UTC"
 
   #schedule_expression = "at(${local.future_time})" #"rate(1 hours)"
 
   target {
     arn      = aws_lambda_function.sentimentAnalyzer.arn
     role_arn = aws_iam_role.eventbridge_scheduler.arn
-
+     # --- This is where you provide the payload ---
+    input = jsonencode({
+      httpMethod          = "POST",
+      body       =  "{\"appId\":\"389801252\"}"
+      headers    = { "Content-Type": "application/json", "X-Scheduler-Trigger": "true" }
+      
+    })
   }
   depends_on = [aws_lambda_function.sentimentAnalyzer]
 }
