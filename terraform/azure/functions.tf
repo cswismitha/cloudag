@@ -225,7 +225,7 @@ resource "azurerm_windows_function_app" "sentimentAnalyzer" {
   }
 }
 # --- Azure Key Vault Secret Access Policy for the Function App's Managed Identity ---
-resource "azurerm_key_vault_access_policy" "func_app_secret_get" {
+/*resource "azurerm_key_vault_access_policy" "func_app_secret_get" {
   key_vault_id = azurerm_key_vault.kv.id
   tenant_id    = var.tenant_id
   object_id    = data.azurerm_user_assigned_identity.uami.principal_id #azurerm_windows_function_app.sendNotification.identity[0].principal_id
@@ -235,7 +235,7 @@ resource "azurerm_key_vault_access_policy" "func_app_secret_get" {
     "List" 
   ]
 }
-
+*/
 
 #resource "azurerm_linux_function_app" "fetchReview" {
 #  name                       = "${var.project_prefix}-fetchreview"
