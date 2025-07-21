@@ -6,7 +6,6 @@
     <title>Customer Sentiment Analysis</title>
     <style>
         /* Base styles and resets */
-        
         :root {
             --primary: #6c63ff;
             --primary-light: #b4b0ff;
@@ -244,7 +243,7 @@
         /* Form styles */
         .input-container {
             display: flex;
-            justify-content: space-around;
+            justify-content: center; /* Changed to center */
             flex-wrap: wrap;
             gap: 2rem;
             margin-bottom: 3rem;
@@ -253,6 +252,7 @@
         .input-group {
             flex: 1;
             min-width: 200px;
+            max-width: 400px; /* Added max-width for single input */
         }
 
         .input-label {
@@ -262,39 +262,20 @@
             color: var(--dark);
         }
 
-        .select-wrapper {
-            position: relative;
-        }
-
-        .custom-select {
+        .input-field { /* New style for text input */
             width: 100%;
             padding: 0.9rem 1rem;
             background-color: #f8f9fa;
             border: 1px solid #eaeaea;
             border-radius: 8px;
-            appearance: none;
-            cursor: pointer;
             font-size: 1rem;
             transition: var(--transition);
         }
 
-        .custom-select:focus {
+        .input-field:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
-        }
-
-        .select-arrow {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-            transition: var(--transition);
-        }
-
-        .select-wrapper:hover .select-arrow {
-            transform: translateY(-50%) translateY(2px);
         }
 
         /* Button styles */
@@ -744,37 +725,13 @@
         <div class="tool-container">
             <div class="tool-title">
                 <h2>Let's check how is customer feeling</h2>
-                <p>Select your app and duration to analyze customer sentiment</p>
+                <p>Analyze customer sentiment for Instagram</p>
             </div>
 
             <div class="input-container">
                 <div class="input-group">
-                    <label class="input-label">App</label>
-                    <div class="select-wrapper">
-                        <select id="appSelect" class="custom-select">
-                            <option value="" disabled selected>Select App</option>
-                            <option value="App A">App A</option>
-                            <option value="App B">App B</option>
-                        </select>
-                        <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Duration in months</label>
-                    <div class="select-wrapper">
-                        <select id="durationSelect" class="custom-select">
-                            <option value="" disabled selected>Select Duration</option>
-                            <option value="1">1</option> <option value="3">3</option>
-                            <option value="6">6</option>
-                            <option value="12">12</option>
-                        </select>
-                        <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </div>
+                    <label for="appName" class="input-label">App</label>
+                    <input type="text" id="appName" class="input-field" value="Instagram" readonly>
                 </div>
             </div>
 
