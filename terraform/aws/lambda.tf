@@ -105,3 +105,18 @@ resource "aws_lambda_permission" "allow_scheduler" {
   source_arn    = aws_scheduler_schedule.daily_trigger.arn
 }
 
+resource "aws_lambda_event_source_mapping" "sqs_trigger" {
+  event_source_arn = aws_sqs_queue.notification.arn
+  function_name    = aws_lambda_function.sendEmailNotification.arn
+
+  # Batching configuration
+  batch_size        = 10      # Number of messages to process in one invocation (max 10 for SQS)
+  #maximum_batching_window = 30 # Max time in seconds to gather messages before invoking (0-300)
+
+  # Ensure the event source mapping is created after the queue and lambda are ready
+  depends_on = [
+    aws_sqs_queue.notification,
+    aws_lambda_function.sendEmailNotification,
+    aws_iam_role_policy.lambda_sqs_write_policy # Ensure permissions are attached
+  ]
+}
