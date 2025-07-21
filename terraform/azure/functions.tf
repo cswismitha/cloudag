@@ -40,7 +40,7 @@ resource "azurerm_key_vault" "kv" {
 
 data "azurerm_user_assigned_identity" "uami" {
   name                = "Demo"
-  resource_group_name = azurerm_resource_group.rg.name
+  resource_group_name = "DefaultResourceGroup-CCAN"
 }
 
 resource "azurerm_key_vault_access_policy" "github_actions" {
