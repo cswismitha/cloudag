@@ -89,8 +89,8 @@ resource "azurerm_windows_function_app" "fetchSummary" {
     ftps_state = "Disabled"
 
     cors {
-      allowed_origins = ["*"] # ["https://${azurerm_storage_account.static_web.name}.z13.web.core.windows.net"]
-      support_credentials = false
+      allowed_origins = ["https://portal.azure.com", "https://cloudagstorage.blob.core.windows.net"] # ["https://${azurerm_storage_account.static_web.name}.z13.web.core.windows.net"]
+      support_credentials = true
     }
 
     application_stack {
@@ -99,7 +99,7 @@ resource "azurerm_windows_function_app" "fetchSummary" {
   }
 
   identity {
-    type = "UserAssigned"
+    type = "SystemAssigned, UserAssigned"
     # Reference the ID of the User-Assigned Managed Identity
     identity_ids = [data.azurerm_user_assigned_identity.uami.id]
   }
@@ -125,6 +125,7 @@ resource "azurerm_windows_function_app" "fetchSummary" {
   }
   depends_on = [azurerm_storage_queue.notification]
 }
+
 resource "azurerm_windows_function_app" "sendNotification" {
   name                       = "${var.project_prefix}-sendNotification"
   location                   = azurerm_resource_group.rg.location
@@ -182,6 +183,11 @@ resource "azurerm_windows_function_app" "sentimentAnalyzer" {
    
     application_stack {
       node_version = "~22"
+    }
+
+    cors {
+      allowed_origins = ["https://portal.azure.com"] # ["https://${azurerm_storage_account.static_web.name}.z13.web.core.windows.net"]
+      support_credentials = false
     }
   }
 
