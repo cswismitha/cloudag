@@ -49,7 +49,7 @@ variable "aws_lambda_function_name_sendmail" {
 variable "aws_sendgrid_secret_name" {
   description = "The name of the secret in AWS Secrets Manager containing the SendGrid API Key."
   type        = string
-  default     = "sendgridApikey2" 
+  default     = "sendgridApikey3" 
   sensitive   = true
 }
 
