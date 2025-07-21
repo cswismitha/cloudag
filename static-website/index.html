@@ -112,7 +112,7 @@
 
         /* Hero Section */
         .hero {
-            height: 100vh;
+            height: 65vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -196,13 +196,13 @@
 
         /* Main Tool Section */
         .tool-section {
-            padding: 6rem 2rem;
+            padding: 1rem 2rem;
             position: relative;
             background-color: white;
         }
 
         .tool-container {
-            max-width: 800px;
+            max-width: 100%;
             margin: 0 auto;
             background-color: white;
             border-radius: 15px;
@@ -482,7 +482,6 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
             transition: var(--transition);
-            opacity: 0;
             transform: translateY(30px);
         }
 
@@ -724,13 +723,12 @@
     <section class="tool-section" id="tool">
         <div class="tool-container">
             <div class="tool-title">
-                <h2>Let's check how is customer feeling</h2>
+                <h2>Let's check our customers sentiment</h2>
                 <p>Analyze customer sentiment for Instagram</p>
             </div>
 
             <div class="input-container">
                 <div class="input-group">
-                    <label for="appName" class="input-label">App</label>
                     <input type="text" id="appName" class="input-field" value="Instagram" readonly>
                 </div>
             </div>

@@ -11,9 +11,15 @@ export class EmailService {
         // Get email details from the event object or use defaults/environment variables
         const toEmail: string = config.tomailid; // Recipient email address
         const fromEmail: string = config.frommailid; // Verified Sender email address
-        const subject: string = 'Email from function using SendGrid Library';
-        const textBody: string = 'This is the plain text content.';
-        const htmlBody: string = '<p>This is the <strong>HTML</strong> content.</p>';
+        const subject: string = 'Notification: Sentiment Analysis';
+        //const textBody: string = 'This is the plain text content.';
+        const htmlBody: string = '<html>' +
+            '<body style="font-family: sans-serif; text-align: center; margin: 20px;">' +
+            '<h2 style="color: #4CAF50;">Analysis Complete!</h2>' +
+            '<p>Hi, Sentiment analysis has been successfully processed. Go ahead and check the portal for the results</p>' +
+            '<p>Thank you, SentimentScope Team.</p>' +
+            '</body>' +
+            '</html>';
 
         if (!fromEmail || !toEmail) {
             console.error("Missing required information: API Key, From Email, or To Email.");
@@ -27,8 +33,7 @@ export class EmailService {
             to: toEmail,
             from: fromEmail, // Use your verified sender email here
             subject: subject,
-            text: textBody,
-            html: htmlBody,
+            html: htmlBody
         };
 
         try {

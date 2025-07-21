@@ -80,7 +80,7 @@ resource "azurerm_storage_blob" "config_js" {
   content_type           = "application/javascript"
   source_content = <<EOT
 window._env_ = {
-  API_ENDPOINT_URL: "https://cloudag-fetchsummary.azurewebsites.net/api/tssummary"
+  API_ENDPOINT_URL: "https://${azurerm_api_management.apim.name}.azure-api.net/cloudag-fetchsummary/tssummary"
 };
 EOT
 }

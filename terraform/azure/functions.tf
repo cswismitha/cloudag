@@ -153,9 +153,8 @@ resource "azurerm_windows_function_app" "sendNotification" {
     SCM_DO_BUILD_DURING_DEPLOYMENT = "true"
     FROM_EMAIL                     = var.from_email_address
     TO_EMAIL                       = var.to_email_address
-    SENDGRID_API_KEY               = "@Microsoft.KeyVault(SecretUri=${azurerm_key_vault.kv.vault_uri}/secrets/${var.azure_sendgrid_secret_name}/)"
     AZQUEUE_NAME                   = azurerm_storage_queue.notification.name
-    AZQUEUE_URL                    = azurerm_storage_account.func_storage.primary_connection_string
+    AZQUEUE_URL                    = "AzureWebJobsStorage"
     PLATFORM                       = "azure"
     KEY_VAULT_URL                  = azurerm_key_vault.kv.vault_uri
     CLIENT_ID                      = var.app_client_id
