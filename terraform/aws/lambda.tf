@@ -117,6 +117,6 @@ resource "aws_lambda_event_source_mapping" "sqs_trigger" {
   depends_on = [
     aws_sqs_queue.notification,
     aws_lambda_function.sendEmailNotification,
-    aws_iam_role_policy.lambda_sqs_write_policy # Ensure permissions are attached
+    aws_iam_policy.lambda_sqs_write_policy # Ensure permissions are attached
   ]
 }
