@@ -45,7 +45,7 @@ resource "aws_iam_role" "sendNotification_role" {
   })
 }
 
-/*
+
 # IAM Policy Document for DynamoDB Read/Write
 data "aws_iam_policy_document" "dynamodb_rw" {
   statement {
@@ -179,7 +179,7 @@ resource "aws_iam_role_policy_attachment" "flambda_dynamodb_rw_attach" {
   role       = aws_iam_role.fetchSummary_role.name
   policy_arn = aws_iam_policy.dynamodb_rw_policy.arn
 }
-*/
+
 # IAM Role that EventBridge Scheduler assumes
 resource "aws_iam_role" "eventbridge_scheduler" {
   name = "eventbridge-scheduler-lambda-role"
