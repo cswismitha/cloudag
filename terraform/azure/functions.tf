@@ -99,9 +99,9 @@ resource "azurerm_windows_function_app" "fetchSummary" {
   }
 
   identity {
-    type = "SystemAssigned, UserAssigned"
+    type = "SystemAssigned"
     # Reference the ID of the User-Assigned Managed Identity
-    identity_ids = [data.azurerm_user_assigned_identity.uami.id]
+    #identity_ids = [data.azurerm_user_assigned_identity.uami.id]
   }
 
   app_settings = {
@@ -125,7 +125,6 @@ resource "azurerm_windows_function_app" "fetchSummary" {
   }
   depends_on = [azurerm_storage_queue.notification]
 }
-
 resource "azurerm_windows_function_app" "sendNotification" {
   name                       = "${var.project_prefix}-sendNotification"
   location                   = azurerm_resource_group.rg.location
@@ -143,9 +142,9 @@ resource "azurerm_windows_function_app" "sendNotification" {
   }
 
   identity {
-    type = "UserAssigned"
+    type = "SystemAssigned"
     # Reference the ID of the User-Assigned Managed Identity
-    identity_ids = [data.azurerm_user_assigned_identity.uami.id]
+    #identity_ids = [data.azurerm_user_assigned_identity.uami.id]
   }
 
   app_settings = {  
@@ -187,14 +186,14 @@ resource "azurerm_windows_function_app" "sentimentAnalyzer" {
 
     cors {
       allowed_origins = ["https://portal.azure.com"] # ["https://${azurerm_storage_account.static_web.name}.z13.web.core.windows.net"]
-      support_credentials = false
+      support_credentials = true
     }
   }
 
   identity {
-    type = "UserAssigned"
+    type = "SystemAssigned"
     # Reference the ID of the User-Assigned Managed Identity
-    identity_ids = [data.azurerm_user_assigned_identity.uami.id]
+    # identity_ids = [data.azurerm_user_assigned_identity.uami.id]
   }
 
   app_settings = {
