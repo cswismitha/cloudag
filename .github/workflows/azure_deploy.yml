@@ -124,23 +124,23 @@ jobs:
               --resource-group cloudag-rg \
               --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true ENABLE_ORYX_BUILD=true NODE_ENV=development
 
-      - name: Deploy sendNotification function
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az functionapp deployment source config-zip \
-            --resource-group cloudag-rg \
-            --name cloudag-sendNotification  \
-            --src ./terraform/azure/sendNotification.zip
+      #- name: Deploy sendNotification function
+       # uses: azure/CLI@v1
+       # with:
+        #  inlineScript: |
+         #   az functionapp deployment source config-zip \
+          #  --resource-group cloudag-rg \
+           # --name cloudag-sendNotification  \
+            #--src ./terraform/azure/sendNotification.zip
 
-      - name: Deploy fetchSummary function
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az functionapp deployment source config-zip \
-            --resource-group cloudag-rg \
-            --name cloudag-fetchSummary  \
-            --src ./terraform/azure/fetchSummary.zip
+      #- name: Deploy fetchSummary function
+       # uses: azure/CLI@v1
+        #with:
+         # inlineScript: |
+          #  az functionapp deployment source config-zip \
+           # --resource-group cloudag-rg \
+            #--name cloudag-fetchSummary  \
+            #--src ./terraform/azure/fetchSummary.zip
 
       - name: Deploy sentimentAnalyzer function
         uses: azure/CLI@v1

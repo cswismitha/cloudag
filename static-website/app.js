@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         outputContainer.style.display = 'none';
         loading.style.display = 'block';
         checkButton.disabled = true;
-        checkButton.textContent = 'Analyzing...';
+        checkButton.textContent = 'Loading...';
 
         // Hardcoded appId for Instagram
         const appId = '389801252'; // This ID is typically associated with Instagram in some contexts, or it can be a placeholder.
@@ -53,14 +53,14 @@ document.addEventListener('DOMContentLoaded', function() {
             loading.style.display = 'none';
             outputContainer.style.display = 'block';
             checkButton.disabled = false;
-            checkButton.textContent = 'Check Now';
+            checkButton.textContent = 'Click to View';
         })
         .catch(error => {
             // Using a custom message box instead of alert
             showCustomAlert('An error occurred: ' + error.message);
             loading.style.display = 'none';
             checkButton.disabled = false;
-            checkButton.textContent = 'Check Now';
+            checkButton.textContent = 'Click to View';
             sentimentIndicator.style.backgroundColor = '#e6e6e6';
             summaryContent.textContent = 'Error retrieving sentiment data.';
             outputContainer.style.display = 'none';
