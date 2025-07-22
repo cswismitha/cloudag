@@ -28,6 +28,7 @@ for func in "${FUNCTIONS[@]}"; do
   npm install --silent
   # ensure necessary package are installed
   #npm install @azure/cosmos @azure/identity @azure/keyvault-secrets @azure/msal-node
+  npm uninstall aws-sdk @aws-sdk/client-dynamodb @aws-sdk/lib-dynamodb @aws-sdk/client-secrets-manager @aws-sdk/client-sqs @aws-sdk/util-dynamodb
 
   echo "Compiling TypeScript using tsconfig.azure.json..."
   npx tsc --project tsconfig.azure.json

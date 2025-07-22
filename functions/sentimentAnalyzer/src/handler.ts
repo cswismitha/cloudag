@@ -62,7 +62,7 @@ export const handler = async ( event: any, context: any ): Promise<any> => {
     if (!requestBody.appId) throw new Error("App Id not in the request");
     
     const reviewService = new ReviewService(dbProvider as IDatabaseProvider, qProvider as IQueueProvider);
-    requestBody = await reviewService.process(requestBody.appId);
+    responseBody = await reviewService.process(requestBody.appId);
     console.log('Processed');    
   } catch (error: any) {
     console.error('Error processing event:', error);
