@@ -1,8 +1,3 @@
-//import { DynamoDBProvider } from "./aws/DynamoDBProvider";
-//import { SQSProvider } from "./aws/SQSProvider";
-//import { CosmosDBProvider } from "./azure/CosmosDBProvider";
-//import { KeyVaultProvider } from "./azure/KeyVaultProvider";
-//import { StorageQueueProvider } from "./azure/StorageQueueProvider";
 import { IDatabaseProvider } from "./interfaces/IDatabaseProvider";
 import { IQueueProvider } from "./interfaces/IQueueProvider";
 import { ReviewService } from "./services/ReviewService";
@@ -33,9 +28,6 @@ export const handler = async ( event: any, context: any ): Promise<any> => {
     if (platform === 'azure') {  
       const { CosmosDBProvider } = require('./azure/CosmosDBProvider');
       const { StorageQueueProvider } = require('./azure/StorageQueueProvider');
-      const { KeyVaultProvider } = require('./azure/KeyVaultProvider');
-      const secProvider = new KeyVaultProvider();
-      //const connectionString = await secProvider.getSecret('dbconnstring');
       dbProvider = new CosmosDBProvider(config.cosmosdb.endpoint);
       qProvider = new StorageQueueProvider();
       try {

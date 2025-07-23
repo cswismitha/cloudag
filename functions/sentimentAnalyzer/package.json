@@ -10,7 +10,7 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.149",
     "@types/axios": "^0.9.36",
-    "@types/node": "^22.15.21",
+    "@types/node": "^22.16.5",
     "@types/sentiment": "^5.0.4",
     "typescript": "^5.8.3"
   },
@@ -27,7 +27,7 @@
     "@azure/storage-queue": "^12.26.0",
     "axios": "^1.9.0",
     "node-summarizer": "^1.0.7",
-    "typescript": "^5.8.3",
-    "sentiment": "^5.0.2"
+    "sentiment": "^5.0.2",
+    "typescript": "^5.8.3"
   }
 }
