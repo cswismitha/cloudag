@@ -19,7 +19,7 @@ export class ReviewService {
         let sentAnalysis = '';
         let sentiment = '';
         if (reviews) {
-            sentAnalysis = await getSentimentAnalysis(reviews);
+            sentAnalysis = await getORSentimentAnalysis(reviews);
             console.log('summary retrieved', sentAnalysis);    
             sentiment = analyzeSentiment(sentAnalysis);
             await this.saveSummary(appId, sentAnalysis, sentiment, config.cosmosdb.summContainerId);

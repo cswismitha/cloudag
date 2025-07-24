@@ -20,3 +20,6 @@ crash.*.log
 # *.tfvars
 
 # Add other build/IDE specific ignores
+functions/sentimentAnalyzer/node_modules/
+functions/sentimentAnalyzer/dist/
+functions/sentimentAnalyzer/package-lock.json
